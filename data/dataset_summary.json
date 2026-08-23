@@ -1,0 +1,26 @@
+{
+  "project": "LoRA-Fine-Tuning-Pipeline",
+  "domain": "NovaAI (fictional)",
+  "facts": 70,
+  "examples_total": 420,
+  "splits": {
+    "train": 280,
+    "validation": 70,
+    "test": 70
+  },
+  "examples_per_fact": {
+    "train": 4,
+    "validation": 1,
+    "test": 1
+  },
+  "categories": {
+    "authentication": 8,
+    "api_keys": 9,
+    "models": 8,
+    "rate_limits": 8,
+    "semantic_cache": 11,
+    "configuration": 8,
+    "deployment": 8,
+    "troubleshooting": 10
+  }
+}

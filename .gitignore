@@ -1,0 +1,60 @@
+# Python and notebook caches.
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# Local environments and credentials.
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Generated training artifacts and checkpoints (adapter weights can be large).
+outputs/
+artifacts/
+checkpoint*/
+**/checkpoint-*/
+novaai-qlora-output/
+runs/
+wandb/
+
+# Downloaded model weights and exported models.
+pytorch_model*.bin
+model*.safetensors
+*.gguf
+*.ckpt
+*.pt
+*.pth
+
+# Hugging Face and model download caches.
+.cache/
+.cache/huggingface/
+huggingface/
+hf_cache/
+transformers_cache/
+hub/
+
+# Temporary Colab uploads and archives.
+sample_data/
+content/
+colab_tmp/
+tmp/
+temp/
+*.zip
+*.tar
+*.tar.gz
+
+# Local caches and editor files.
+.idea/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db

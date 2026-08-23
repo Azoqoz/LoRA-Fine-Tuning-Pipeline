@@ -1,0 +1,51 @@
+project_name: LoRA-Fine-Tuning-Pipeline
+domain: NovaAI (fictional)
+seed: 42
+
+model:
+  base_model_id: Qwen/Qwen2.5-1.5B-Instruct
+  max_length: 512
+
+quantization:
+  load_in_4bit: true
+  bnb_4bit_quant_type: nf4
+  bnb_4bit_use_double_quant: true
+  bnb_4bit_compute_dtype: float16
+
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  bias: none
+  task_type: CAUSAL_LM
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+training:
+  output_dir: outputs/qwen2.5-1.5b-novaai-qlora
+  adapter_dir: artifacts/novaai-qwen2.5-1.5b-qlora
+  num_train_epochs: 3
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 2
+  gradient_accumulation_steps: 4
+  learning_rate: 0.0002
+  fp16: true
+  bf16: false
+  eval_strategy: epoch
+  save_strategy: epoch
+  logging_steps: 5
+  save_total_limit: 3
+  report_to: none
+  gradient_checkpointing: true
+
+inference:
+  batch_size: 2
+  max_new_tokens: 128
+  do_sample: false
+
