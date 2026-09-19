@@ -1,0 +1,284 @@
+{
+  "provenance": {
+    "config_hash": "ea66571a0e2a56f02d1a440aa1796be6dfef12c3192e41e75dc742301296fea8",
+    "csv_sha256": "a0459b9b9b039714cd3ad0b635a2a33f9cfb5dfb52a49e060a1848429d8e96f3",
+    "dataset_hash": "86e5fed9fb2d86f6dbe657b8219da6533dede458f514ba1e267c835755b68ef3",
+    "dataset_hashes": {
+      "dataset_summary.json": "bdd41aacc5b531bbecc19c7492b477f027793ce6ff5b742ce6db9a2c4d1feaf1",
+      "test.jsonl": "86e5fed9fb2d86f6dbe657b8219da6533dede458f514ba1e267c835755b68ef3",
+      "train.jsonl": "f279525337c1eb817d554eced7c01217ad22be1ffa434ef9f2160a9c634b2642",
+      "validation.jsonl": "2a72111a7586d1db9d990b0664d88de6d2d65f5d5be3bed4b0a967876856d68d"
+    },
+    "generation": {
+      "batch_size": 2,
+      "do_sample": false,
+      "max_length": 512,
+      "max_new_tokens": 128,
+      "seed": 42
+    },
+    "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+    "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+    "role": "base",
+    "run_id": "cac35dc5-6efa-4c15-9754-37a4de551d5f",
+    "system_prompt": "You are NovaAI's technical support assistant. Answer the user's question accurately and concisely using the NovaAI product facts you know."
+  },
+  "created_at_utc": "2026-09-19T11:30:09.676486+00:00",
+  "evaluation_protocol": {
+    "generation": {
+      "batch_size": 2,
+      "do_sample": false,
+      "max_length": 512,
+      "max_new_tokens": 128,
+      "seed": 42
+    },
+    "normalized_exact_match": "case/punctuation/whitespace-normalized equality",
+    "token_overlap": "multiset token precision, recall, and F1",
+    "keyword_overlap": "Jaccard overlap after removing a fixed stopword list",
+    "expected_fact_coverage": "fraction of expected non-stopword tokens present"
+  },
+  "num_examples": 70,
+  "base_model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "adapter_path": "artifacts/adapter",
+  "base_model": {
+    "normalized_exact_match": 0.0,
+    "token_precision": 0.09531446128081017,
+    "token_recall": 0.5703014329274835,
+    "token_f1": 0.15970241310236774,
+    "keyword_overlap": 0.10492614322910516,
+    "expected_fact_coverage": 0.5333106575963719
+  },
+  "fine_tuned_model": {
+    "normalized_exact_match": 0.5857142857142857,
+    "token_precision": 0.7934521034521035,
+    "token_recall": 0.8085908909018152,
+    "token_f1": 0.7963662970732804,
+    "keyword_overlap": 0.7546693584193583,
+    "expected_fact_coverage": 0.8161621315192744
+  },
+  "delta_fine_tuned_minus_base": {
+    "normalized_exact_match": 0.5857142857142857,
+    "token_precision": 0.6981376421712933,
+    "token_recall": 0.23828945797433176,
+    "token_f1": 0.6366638839709127,
+    "keyword_overlap": 0.6497432151902531,
+    "expected_fact_coverage": 0.28285147392290255
+  },
+  "by_category": {
+    "api_keys": {
+      "count": 9,
+      "base_model": {
+        "normalized_exact_match": 0.0,
+        "token_precision": 0.10019722097396612,
+        "token_recall": 0.5928050344717012,
+        "token_f1": 0.16996466317919975,
+        "keyword_overlap": 0.11011080813162089,
+        "expected_fact_coverage": 0.5660493827160494
+      },
+      "fine_tuned_model": {
+        "normalized_exact_match": 0.5555555555555556,
+        "token_precision": 0.8272727272727273,
+        "token_recall": 0.7882395382395383,
+        "token_f1": 0.8023688430420548,
+        "keyword_overlap": 0.7699905033238367,
+        "expected_fact_coverage": 0.8197530864197531
+      },
+      "delta": {
+        "normalized_exact_match": 0.5555555555555556,
+        "token_precision": 0.7270755062987612,
+        "token_recall": 0.1954345037678371,
+        "token_f1": 0.632404179862855,
+        "keyword_overlap": 0.6598796951922158,
+        "expected_fact_coverage": 0.25370370370370365
+      }
+    },
+    "authentication": {
+      "count": 8,
+      "base_model": {
+        "normalized_exact_match": 0.0,
+        "token_precision": 0.09046393011126828,
+        "token_recall": 0.6295138888888889,
+        "token_f1": 0.15578463144770394,
+        "keyword_overlap": 0.12359506693231367,
+        "expected_fact_coverage": 0.6614583333333334
+      },
+      "fine_tuned_model": {
+        "normalized_exact_match": 0.625,
+        "token_precision": 0.8177083333333333,
+        "token_recall": 0.8784722222222222,
+        "token_f1": 0.8408061594202898,
+        "keyword_overlap": 0.7837024087024087,
+        "expected_fact_coverage": 0.8735119047619047
+      },
+      "delta": {
+        "normalized_exact_match": 0.625,
+        "token_precision": 0.727244403222065,
+        "token_recall": 0.24895833333333328,
+        "token_f1": 0.6850215279725859,
+        "keyword_overlap": 0.660107341770095,
+        "expected_fact_coverage": 0.21205357142857129
+      }
+    },
+    "configuration": {
+      "count": 8,
+      "base_model": {
+        "normalized_exact_match": 0.0,
+        "token_precision": 0.10896420577192664,
+        "token_recall": 0.6878472222222222,
+        "token_f1": 0.1847278965597403,
+        "keyword_overlap": 0.12932317104192104,
+        "expected_fact_coverage": 0.6799107142857143
+      },
+      "fine_tuned_model": {
+        "normalized_exact_match": 0.75,
+        "token_precision": 0.8333333333333333,
+        "token_recall": 0.8660714285714286,
+        "token_f1": 0.846875,
+        "keyword_overlap": 0.8197115384615384,
+        "expected_fact_coverage": 0.875
+      },
+      "delta": {
+        "normalized_exact_match": 0.75,
+        "token_precision": 0.7243691275614066,
+        "token_recall": 0.17822420634920644,
+        "token_f1": 0.6621471034402597,
+        "keyword_overlap": 0.6903883674196174,
+        "expected_fact_coverage": 0.19508928571428574
+      }
+    },
+    "deployment": {
+      "count": 8,
+      "base_model": {
+        "normalized_exact_match": 0.0,
+        "token_precision": 0.06584195782841117,
+        "token_recall": 0.4919868326118326,
+        "token_f1": 0.11463113327549772,
+        "keyword_overlap": 0.06162323162114691,
+        "expected_fact_coverage": 0.45148809523809524
+      },
+      "fine_tuned_model": {
+        "normalized_exact_match": 0.75,
+        "token_precision": 0.9007936507936508,
+        "token_recall": 0.9097222222222222,
+        "token_f1": 0.9049145299145299,
+        "keyword_overlap": 0.8888888888888888,
+        "expected_fact_coverage": 0.921875
+      },
+      "delta": {
+        "normalized_exact_match": 0.75,
+        "token_precision": 0.8349516929652396,
+        "token_recall": 0.4177353896103896,
+        "token_f1": 0.7902833966390322,
+        "keyword_overlap": 0.8272656572677419,
+        "expected_fact_coverage": 0.47038690476190476
+      }
+    },
+    "models": {
+      "count": 8,
+      "base_model": {
+        "normalized_exact_match": 0.0,
+        "token_precision": 0.07008013438031979,
+        "token_recall": 0.4183802308802309,
+        "token_f1": 0.11671758505763502,
+        "keyword_overlap": 0.06316196195308804,
+        "expected_fact_coverage": 0.3236607142857143
+      },
+      "fine_tuned_model": {
+        "normalized_exact_match": 0.375,
+        "token_precision": 0.6380008880008881,
+        "token_recall": 0.689506673881674,
+        "token_f1": 0.6573067632850241,
+        "keyword_overlap": 0.6038267288267288,
+        "expected_fact_coverage": 0.6869047619047619
+      },
+      "delta": {
+        "normalized_exact_match": 0.375,
+        "token_precision": 0.5679207536205683,
+        "token_recall": 0.27112644300144306,
+        "token_f1": 0.5405891782273891,
+        "keyword_overlap": 0.5406647668736408,
+        "expected_fact_coverage": 0.3632440476190476
+      }
+    },
+    "rate_limits": {
+      "count": 8,
+      "base_model": {
+        "normalized_exact_match": 0.0,
+        "token_precision": 0.08764427136813563,
+        "token_recall": 0.4659455128205128,
+        "token_f1": 0.14426762786585817,
+        "keyword_overlap": 0.08916937747161627,
+        "expected_fact_coverage": 0.4050595238095238
+      },
+      "fine_tuned_model": {
+        "normalized_exact_match": 0.5,
+        "token_precision": 0.7932692307692308,
+        "token_recall": 0.8177083333333333,
+        "token_f1": 0.7995833333333333,
+        "keyword_overlap": 0.7585227272727273,
+        "expected_fact_coverage": 0.809375
+      },
+      "delta": {
+        "normalized_exact_match": 0.5,
+        "token_precision": 0.7056249594010953,
+        "token_recall": 0.3517628205128205,
+        "token_f1": 0.6553157054674752,
+        "keyword_overlap": 0.669353349801111,
+        "expected_fact_coverage": 0.40431547619047614
+      }
+    },
+    "semantic_cache": {
+      "count": 11,
+      "base_model": {
+        "normalized_exact_match": 0.0,
+        "token_precision": 0.09642442448138368,
+        "token_recall": 0.6044924030218147,
+        "token_f1": 0.1621360785370657,
+        "keyword_overlap": 0.1030128886149325,
+        "expected_fact_coverage": 0.5588744588744589
+      },
+      "fine_tuned_model": {
+        "normalized_exact_match": 0.45454545454545453,
+        "token_precision": 0.7076479076479076,
+        "token_recall": 0.7150326797385621,
+        "token_f1": 0.7034168406293734,
+        "keyword_overlap": 0.6307736455463728,
+        "expected_fact_coverage": 0.7167748917748917
+      },
+      "delta": {
+        "normalized_exact_match": 0.45454545454545453,
+        "token_precision": 0.611223483166524,
+        "token_recall": 0.11054027671674738,
+        "token_f1": 0.5412807620923077,
+        "keyword_overlap": 0.5277607569314403,
+        "expected_fact_coverage": 0.15790043290043287
+      }
+    },
+    "troubleshooting": {
+      "count": 10,
+      "base_model": {
+        "normalized_exact_match": 0.0,
+        "token_precision": 0.13256126359153042,
+        "token_recall": 0.6387049062049062,
+        "token_f1": 0.21369590909937405,
+        "keyword_overlap": 0.14857085059278297,
+        "expected_fact_coverage": 0.5917063492063492
+      },
+      "fine_tuned_model": {
+        "normalized_exact_match": 0.7,
+        "token_precision": 0.8447222222222223,
+        "token_recall": 0.835,
+        "token_f1": 0.8390849673202615,
+        "keyword_overlap": 0.8121212121212121,
+        "expected_fact_coverage": 0.8535714285714284
+      },
+      "delta": {
+        "normalized_exact_match": 0.7,
+        "token_precision": 0.7121609586306918,
+        "token_recall": 0.1962950937950938,
+        "token_f1": 0.6253890582208874,
+        "keyword_overlap": 0.6635503615284292,
+        "expected_fact_coverage": 0.2618650793650792
+      }
+    }
+  }
+}

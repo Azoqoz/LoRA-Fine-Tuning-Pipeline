@@ -112,9 +112,35 @@ These lexical metrics are intentionally simple and inspectable. They do not
 fully measure semantic correctness, contradiction, or hallucination. Review
 `comparison.csv` qualitatively alongside the aggregate scores.
 
-This README makes **no performance-improvement claim**. Final comparison metrics
-must come from actually running both inference passes and are written by the
-notebook only after both prediction files validate successfully.
+## Experiment Results
+
+The completed September 19, 2026 Colab run used a Tesla T4, Qwen2.5-1.5B-Instruct,
+4-bit NF4 double quantization and PEFT LoRA adapters. Three epochs (105 steps)
+took 309.5443 seconds of recorded training time. Only adapters were trained.
+
+The 420 synthetic NovaAI examples are split 280 train / 70 validation / 70 test.
+Test prompts are paraphrases of the same trained facts, not unseen facts.
+
+| Metric | Base (%) | Fine-tuned (%) | Difference (pp) |
+|---|---:|---:|---:|
+| Normalized exact match | 0.00 | 58.57 | +58.57 |
+| Token precision | 9.53 | 79.35 | +69.81 |
+| Token recall | 57.03 | 80.86 | +23.83 |
+| Token F1 | 15.97 | 79.64 | +63.67 |
+| Keyword Jaccard | 10.49 | 75.47 | +64.97 |
+| Expected-token coverage | 53.33 | 81.62 | +28.29 |
+
+Exact matches increased from 0/70 to 41/70. Token F1 improved on 69 examples,
+worsened on one, and was unchanged on none. These are lexical scores, not full
+factual correctness: some tuned answers still confuse unrelated facts. The
+comparison also includes FP16 baseline versus 4-bit tuned inference.
+
+Dataset/provenance hashes and all per-row, aggregate and category scores were
+validated; metrics reproduce within 1e-12 without retraining or modifying results.
+See [training results and examples](results/TRAINING_RESULTS.md),
+[original metrics](results/metrics.json),
+[row-level comparison](results/comparison.csv), and
+[archive inventory](results/ARCHIVE_MANIFEST.md).
 
 ## Run in Google Colab
 
@@ -144,13 +170,41 @@ using the [official wheel index](https://pytorch.org/get-started/previous-versio
 Training uses the [TRL 0.24.0 interface](https://huggingface.co/docs/trl/v0.24.0/en/sft_trainer).
 The environment, model cache and checkpoints require several GB of disk space.
 
-**Unpublished changes:** cloning retrieves only published code. Until this update
-is published, upload/extract the updated full repository to
-/content/LoRA-Fine-Tuning-Pipeline before running the notebook. Bootstrap uses
-that existing directory without overwriting it. Uploading only the new notebook
-does not provide unpublished source files.
+The completed results are preserved in this repository. A fresh clone does not
+include adapter weights or training checkpoints; those remain in the original
+Colab archive and in ignored local artifacts.
 
 ### Reproduce training
+
+To run a **new experiment without overwriting the archived results**, execute
+the following configuration cell after notebook bootstrap and before Section 2.
+This creates unique output paths; the saved original configuration remains under
+results/provenance/. Skipping this step on a fresh clone will correctly reject
+the existing prediction sidecars as belonging to a different run.
+
+~~~python
+from datetime import datetime, timezone
+from pathlib import Path
+import subprocess
+
+# Use the isolated environment's PyYAML; no notebook-kernel dependency.
+code = '''
+from datetime import datetime, timezone
+from pathlib import Path
+import yaml
+path = Path("configs/training_config.yaml")
+config = yaml.safe_load(path.read_text())
+tag = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+for key, value in config["paths"].items():
+    prefix = "artifacts" if value.startswith("artifacts/") else "results"
+    config["paths"][key] = f"{prefix}/reproduction-{tag}/{Path(value).name}"
+config["training"]["output_dir"] = f"artifacts/reproduction-{tag}/trainer"
+config["training"]["adapter_dir"] = f"artifacts/reproduction-{tag}/adapter"
+path.write_text(yaml.safe_dump(config, sort_keys=False))
+print("New run:", tag)
+'''
+subprocess.run([".venv-colab/bin/python", "-c", code], check=True)
+~~~
 
 The notebook is the canonical entry point because bitsandbytes QLoRA requires a
 supported NVIDIA GPU. It performs these stages in order:
@@ -194,10 +248,10 @@ results/
 └── metrics.json
 ~~~
 
-The supplied baseline remains unchanged in this update. When you execute the
-baseline stage, its original bytes are archived under the legacy filename before
-new predictions are generated. No provenance is invented for the legacy file;
-a fresh baseline is needed for a verified comparison.
+The final baseline and fine-tuned outputs were imported unchanged from the
+validated Colab archive. The older supplied baseline is preserved as
+results/base_model_results.legacy-15c5e0cb695c.csv. Provenance was not invented
+for the legacy file.
 
 Sidecars record model/revision, generation settings, dataset hashes, run ID,
 configuration hash, system prompt and CSV hash. Comparison rejects missing or
@@ -208,7 +262,9 @@ The FP16 baseline versus 4-bit tuned comparison also includes quantization effec
 
 ## Use the saved adapter
 
-After training, reload the same base model and attach the adapter:
+The trained adapter is available locally under artifacts/adapter/ (ignored by
+Git). On another machine, restore that directory from the original Colab archive.
+Then reload the same resolved base revision and attach the saved adapter:
 
 ```python
 import torch
@@ -219,7 +275,7 @@ base_model_id = "Qwen/Qwen2.5-1.5B-Instruct"
 adapter_path = "artifacts/adapter"
 
 import json
-with open("artifacts/run_metadata.json", encoding="utf-8") as stream:
+with open("results/provenance/run_metadata.json", encoding="utf-8") as stream:
     run = json.load(stream)
 
 tokenizer = AutoTokenizer.from_pretrained(adapter_path)
@@ -259,7 +315,16 @@ LoRA-Fine-Tuning-Pipeline/
 │   └── fine_tuning_colab.ipynb
 ├── results/
 │   ├── .gitkeep
-│   └── base_model_results.csv
+│   ├── base_model_results.csv
+│   ├── base_model_results.metadata.json
+│   ├── base_model_results.legacy-15c5e0cb695c.csv
+│   ├── fine_tuned_results.csv
+│   ├── fine_tuned_results.metadata.json
+│   ├── comparison.csv
+│   ├── metrics.json
+│   ├── TRAINING_RESULTS.md
+│   ├── ARCHIVE_MANIFEST.md
+│   └── provenance/
 ├── src/
 │   ├── __init__.py
 │   ├── dataset_utils.py
@@ -276,10 +341,9 @@ LoRA-Fine-Tuning-Pipeline/
 └── requirements.txt
 ```
 
-After a complete Colab run, `results/` also contains
-`fine_tuned_results.csv`, `comparison.csv`, and `metrics.json`. A pre-existing
-baseline CSV supplied with this workspace has been preserved; the future baseline
-stage archives it before generating predictions from the verified run.
+The completed result CSVs, unchanged metrics and lightweight provenance are now
+included. Large model/checkpoint files and the downloaded ZIP remain ignored.
+Only lightweight trainer state, configuration, and metadata are versionable.
 
 ## Lightweight tests
 
@@ -324,7 +388,7 @@ no GPU, model download or training. CPU test success does not establish GPU succ
 - Expand the dataset with harder negatives, ambiguous questions, and explicit
   out-of-domain refusal examples.
 - Track latency, peak memory, adapter size, and generation throughput.
-- Run the CPU-safe test suite in CI and add a recorded Colab GPU integration run.
+- Run the CPU-safe test suite in CI and record explicit adapter-reload events.
 - Compare alternative adapter ranks, target-module sets, and small base models.
 
 ## Suggested CV bullet

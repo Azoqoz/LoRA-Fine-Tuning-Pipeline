@@ -45,6 +45,8 @@ transformers_cache/
 hub/
 
 # Temporary Colab uploads and archives.
+novaai-run.zip
+colab-audit-*/
 sample_data/
 content/
 colab_tmp/

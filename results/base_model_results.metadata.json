@@ -1,0 +1,23 @@
+{
+  "config_hash": "ea66571a0e2a56f02d1a440aa1796be6dfef12c3192e41e75dc742301296fea8",
+  "csv_sha256": "a0459b9b9b039714cd3ad0b635a2a33f9cfb5dfb52a49e060a1848429d8e96f3",
+  "dataset_hash": "86e5fed9fb2d86f6dbe657b8219da6533dede458f514ba1e267c835755b68ef3",
+  "dataset_hashes": {
+    "dataset_summary.json": "bdd41aacc5b531bbecc19c7492b477f027793ce6ff5b742ce6db9a2c4d1feaf1",
+    "test.jsonl": "86e5fed9fb2d86f6dbe657b8219da6533dede458f514ba1e267c835755b68ef3",
+    "train.jsonl": "f279525337c1eb817d554eced7c01217ad22be1ffa434ef9f2160a9c634b2642",
+    "validation.jsonl": "2a72111a7586d1db9d990b0664d88de6d2d65f5d5be3bed4b0a967876856d68d"
+  },
+  "generation": {
+    "batch_size": 2,
+    "do_sample": false,
+    "max_length": 512,
+    "max_new_tokens": 128,
+    "seed": 42
+  },
+  "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "role": "base",
+  "run_id": "cac35dc5-6efa-4c15-9754-37a4de551d5f",
+  "system_prompt": "You are NovaAI's technical support assistant. Answer the user's question accurately and concisely using the NovaAI product facts you know."
+}
