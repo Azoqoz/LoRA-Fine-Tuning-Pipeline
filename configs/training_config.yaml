@@ -4,6 +4,7 @@ seed: 42
 
 model:
   base_model_id: Qwen/Qwen2.5-1.5B-Instruct
+  revision: main
   max_length: 512
 
 quantization:
@@ -28,8 +29,8 @@ lora:
     - down_proj
 
 training:
-  output_dir: outputs/qwen2.5-1.5b-novaai-qlora
-  adapter_dir: artifacts/novaai-qwen2.5-1.5b-qlora
+  output_dir: artifacts/trainer
+  adapter_dir: artifacts/adapter
   num_train_epochs: 3
   per_device_train_batch_size: 2
   per_device_eval_batch_size: 2
@@ -43,9 +44,20 @@ training:
   save_total_limit: 3
   report_to: none
   gradient_checkpointing: true
+  optim: paged_adamw_8bit
+  completion_only_loss: true
+  packing: false
+  resume_from_checkpoint: true
 
 inference:
   batch_size: 2
   max_new_tokens: 128
   do_sample: false
 
+paths:
+  run_metadata: artifacts/run_metadata.json
+  saved_config: artifacts/training_config.yaml
+  base_results: results/base_model_results.csv
+  fine_tuned_results: results/fine_tuned_results.csv
+  comparison: results/comparison.csv
+  metrics: results/metrics.json

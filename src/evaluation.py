@@ -12,6 +12,11 @@ from typing import Any
 
 import pandas as pd
 
+try:
+    from .runtime import validate_pair
+except ImportError:
+    from runtime import validate_pair
+
 IDENTITY_COLUMNS = ["fact_id", "category", "instruction", "expected_response"]
 METRIC_NAMES = [
     "normalized_exact_match",
@@ -117,11 +122,14 @@ def compare_prediction_files(
     metrics_path: str | Path,
     *,
     base_model_id: str = "Qwen/Qwen2.5-1.5B-Instruct",
-    adapter_path: str = "artifacts/novaai-qwen2.5-1.5b-qlora",
+    adapter_path: str = "artifacts/adapter",
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Validate, compare, and persist metrics for two real prediction files."""
-    base = pd.read_csv(base_results_path)
-    tuned = pd.read_csv(fine_tuned_results_path)
+    provenance = validate_pair(base_results_path, fine_tuned_results_path)
+    if provenance['model_id'] != base_model_id:
+        raise ValueError('Requested model differs from prediction provenance.')
+    base = pd.read_csv(base_results_path, keep_default_na=False)
+    tuned = pd.read_csv(fine_tuned_results_path, keep_default_na=False)
     _validate_prediction_frame(base, "base_model_response")
     _validate_prediction_frame(tuned, "fine_tuned_response")
 
@@ -163,9 +171,10 @@ def compare_prediction_files(
         }
 
     metrics: dict[str, Any] = {
+        "provenance": provenance,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "evaluation_protocol": {
-            "generation": "greedy decoding (do_sample=False), same ordered test prompts",
+            "generation": provenance['generation'],
             "normalized_exact_match": "case/punctuation/whitespace-normalized equality",
             "token_overlap": "multiset token precision, recall, and F1",
             "keyword_overlap": "Jaccard overlap after removing a fixed stopword list",

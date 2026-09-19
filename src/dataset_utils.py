@@ -93,11 +93,18 @@ def validate_cross_split_consistency(
     splits: Mapping[str, Sequence[Mapping[str, Any]]],
 ) -> None:
     """Ensure each fact has one category/answer and occurs in every split."""
+    seen_prompts: dict[str, str] = {}
     fact_metadata: dict[str, set[tuple[str, str]]] = defaultdict(set)
     fact_sets: dict[str, set[str]] = {}
     for split, records in splits.items():
         fact_sets[split] = {str(row["fact_id"]) for row in records}
         for row in records:
+            prompt = " ".join(str(row["instruction"]).lower().split())
+            if prompt in seen_prompts:
+                raise DatasetValidationError(
+                    f"Duplicate instruction across {seen_prompts[prompt]} and {split}: {row['fact_id']}"
+                )
+            seen_prompts[prompt] = split
             fact_metadata[str(row["fact_id"])].add(
                 (str(row["category"]), str(row["response"]))
             )
@@ -200,3 +207,24 @@ def render_training_example(record: Mapping[str, Any], tokenizer) -> str:
         add_generation_prompt=False,
     )
 
+
+def validate_token_lengths(splits, tokenizer, max_length):
+    """Reject overlong full conversations before TRL can truncate target answers."""
+    maxima, overlong = {}, []
+    for split, records in splits.items():
+        lengths = []
+        for row in records:
+            tokens = tokenizer.apply_chat_template(
+                training_messages(row['instruction'], row['response']),
+                tokenize=True, add_generation_prompt=False,
+            )
+            lengths.append(len(tokens))
+            if len(tokens) > max_length:
+                overlong.append(f"{split}/{row['fact_id']}/{row['variant']}: {len(tokens)} tokens")
+        maxima[split] = max(lengths, default=0)
+    if overlong:
+        raise DatasetValidationError(
+            f"Complete examples exceed max_length={max_length}; no targets truncated:\n"
+            + "\n".join(overlong)
+        )
+    return maxima

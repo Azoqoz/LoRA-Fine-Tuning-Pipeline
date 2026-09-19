@@ -8,13 +8,16 @@ from typing import Any, Iterable, Mapping
 
 import numpy as np
 import pandas as pd
-import torch
-
-from dataset_utils import prompt_messages
+try:
+    from .dataset_utils import prompt_messages
+except ImportError:  # Compatibility with older notebooks importing from src/.
+    from dataset_utils import prompt_messages
 
 
 def set_reproducible_seed(seed: int = 42) -> None:
     """Seed Python, NumPy, and PyTorch inference paths."""
+    import torch
+
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -40,8 +43,14 @@ def generate_predictions(
     batch_size: int = 2,
     max_new_tokens: int = 128,
     seed: int = 42,
+    max_length: int = 512,
+    do_sample: bool = False,
 ) -> pd.DataFrame:
     """Generate deterministic answers and save a CSV in test-set order."""
+    import torch
+
+    if batch_size < 1 or max_new_tokens < 1 or max_length < 1:
+        raise ValueError("Batch size and token limits must be positive.")
     if response_column not in {"base_model_response", "fine_tuned_response"}:
         raise ValueError(
             "response_column must be 'base_model_response' or 'fine_tuned_response'."
@@ -75,15 +84,17 @@ def generate_predictions(
             prompts,
             return_tensors="pt",
             padding=True,
-            truncation=True,
-            max_length=512,
+            truncation=False,
+            add_special_tokens=False,
         ).to(device)
         prompt_width = inputs["input_ids"].shape[1]
+        if prompt_width > max_length:
+            raise ValueError(f"Prompt exceeds max_length={max_length}; refusing truncation.")
         with torch.inference_mode():
             generated = model.generate(
                 **inputs,
                 max_new_tokens=max_new_tokens,
-                do_sample=False,
+                do_sample=do_sample,
                 use_cache=True,
                 pad_token_id=tokenizer.pad_token_id,
                 eos_token_id=tokenizer.eos_token_id,
@@ -106,4 +117,3 @@ def generate_predictions(
     frame.to_csv(output_path, index=False, encoding="utf-8")
     print(f"\nSaved {len(frame)} predictions to {output_path}")
     return frame
-
