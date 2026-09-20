@@ -1,0 +1,29 @@
+{
+  "name": "model-shift",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "data": "node scripts/prepare-data.mjs",
+    "predev": "npm run data",
+    "dev": "next dev",
+    "prebuild": "npm run data",
+    "build": "next build",
+    "lint": "eslint .",
+    "test": "node --test scripts/*.test.mjs"
+  },
+  "dependencies": {
+    "next": "16.3.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "csv-parse": "^7.0.2",
+    "yaml": "^2.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.5",
+    "typescript": "^5.9.0"
+  }
+}
