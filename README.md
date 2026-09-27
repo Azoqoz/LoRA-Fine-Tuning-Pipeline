@@ -1017,12 +1017,6 @@ The project shows how a small open model can be fine-tuned and evaluated through
 
 ---
 
-## Suggested CV Bullet
-
-> Built a reproducible QLoRA fine-tuning and evaluation pipeline for Qwen2.5-1.5B-Instruct using 4-bit NF4 quantization, PEFT adapters, TRL, strict dataset validation, deterministic before/after benchmarking, and Google Colab T4 hardware.
-
----
-
 ## License
 
 Released under the [MIT License](LICENSE).
